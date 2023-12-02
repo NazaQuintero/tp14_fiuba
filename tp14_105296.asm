@@ -24,6 +24,10 @@ section .data
 
     longitudDelRegistro     dd  30
     posVector   dq 0
+
+    mensajeEncabezadoBubbleSort     db  10,10,"############# BUBBLE SORT #############",0
+    tituloAscendente                db     10,"############# ASCENDENTE  #############",0
+    tituloDescendente               db     10,"############# DESCENDENTE #############",0
     
     ;*** Para debug
     mensajeLeyendo              db      "__Leyendo registro...",0
@@ -54,6 +58,8 @@ main:
     
     mov 	dword[posVector], 1
     call    imprimirVector
+
+    call    bubbleSort
 
     jmp     endProg
     
@@ -235,3 +241,40 @@ imprimirNumeroQueSeEstariaGuardando:
 
     ; fin debug
 ret
+
+
+;________ blubbleSort _________
+
+bubbleSort:
+    call    imprimirEncabezadoDeBubbleSort
+    call    imprimirModoDeOrdenamiento
+ret
+
+imprimirEncabezadoDeBubbleSort:
+    mov     rcx, mensajeEncabezadoBubbleSort
+    sub     rsp, 32
+    call    printf
+    add     rsp, 32
+ret
+
+imprimirModoDeOrdenamiento:
+    mov ah, byte[modoDeOrdenamiento]
+	cmp ah, byte[ASCENDENTE]
+    je  imprimirTituloAscendente
+    jne imprimirTituloDescendente
+ret
+
+imprimirTituloAscendente:
+    mov     rcx, tituloAscendente
+    sub     rsp, 32
+    call    printf
+    add     rsp, 32
+ret
+
+imprimirTituloDescendente:
+    mov     rcx, tituloDescendente
+    sub     rsp, 32
+    call    printf
+    add     rsp, 32
+ret
+
