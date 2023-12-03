@@ -66,8 +66,8 @@ main:
 
     call    bubbleSort
 
-    ; mov     dword[posVector], 1
-    ; call    imprimirVector
+    mov     dword[posVector], 1
+    call    imprimirVector
 
     jmp     endProg
     
@@ -243,26 +243,25 @@ bubbleSort:
     mov     ecx,[posNum1]
     mov     dword[posVector], ecx
     call    obtenerValorDePosicion
-    mov     r8d, dword[eax]
+    mov     r10, [eax]
 
     mov     dword[posNum2], 9
     mov     ecx,[posNum2]
     mov     dword[posVector], ecx
     call    obtenerValorDePosicion
-    mov     r9d, dword[eax]
+    mov     r11, [eax]
     
-    cmp     r8d, r9d
+    cmp     r10, r11
     jg      imprimirElNumero1EsMayor
 
-    mov     [num1], r8
-    mov     [num2], r9
-    
+    mov     [num1], r10
+    mov     [num2], r11
+
     call    imprimirMensajeIntercambio1
     call    imprimirMensajeIntercambio2
 
     ; mov eax, [num1]
     ; mov ebx, [num2]
-    
     
 ret
 
@@ -299,7 +298,7 @@ imprimirPosicion:
 
     mov     rcx,mensajeNumeroGuardado
     mov     rdx,[posVector] ;posicion
-    mov     r8d,dword[eax] ;valor guardado
+    mov     r8,[eax] ;valor guardado
     sub     rsp, 32
     call    printf
     add     rsp, 32
