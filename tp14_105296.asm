@@ -26,8 +26,8 @@ section .data
     posVector   dq 0
 
     mensajeEncabezadoBubbleSort     db  10,10,"############# BUBBLE SORT #############",0
-    tituloAscendente                db     10,"############# ASCENDENTE  #############",0
-    tituloDescendente               db     10,"############# DESCENDENTE #############",0
+    tituloAscendente                db     10,"############# ASCENDENTE  #############",10,0
+    tituloDescendente               db     10,"############# DESCENDENTE #############",10,0
     
     ;*** Para debug
     mensajeLeyendo              db      "__Leyendo registro...",0
@@ -35,6 +35,8 @@ section .data
     mensajeNumeroGuardado       db      "El numero guardado en la posicion %d es: %d",10,0
     ; debug   db  "posVector: %i",10,0
     linea			db	"|%X| ",0
+    debugValor   db "Valor en la posicion [%d] es: [%d] ",10, 0
+    debugValor2Swap   db "Valor 2 [%d] ",10, 0
 
 section .bss
     nombreDeArchivo				resb 	30
@@ -60,6 +62,9 @@ main:
     call    imprimirVector
 
     call    bubbleSort
+
+    ; mov     dword[posVector], 1
+    ; call    imprimirVector
 
     jmp     endProg
     
@@ -198,17 +203,7 @@ ret
 
 
 imprimirVector:
-    mov     eax, dword[posVector]
-    dec     eax
-    imul    dword[longitudDelRegistro]
-    lea     eax, [vector+eax]
-
-    mov     rcx,mensajeNumeroGuardado
-    mov     rdx,[posVector] ;posicion
-    mov     r8d,dword[eax] ;valor guardado
-    sub     rsp, 32
-    call    printf
-    add     rsp, 32
+    call    imprimirPosicion
     
     inc     dword[posVector]
     mov     eax, dword[lenVector]
@@ -248,6 +243,10 @@ ret
 bubbleSort:
     call    imprimirEncabezadoDeBubbleSort
     call    imprimirModoDeOrdenamiento
+    ;test
+
+    mov     dword[posVector], 2
+    call    imprimirPosicion
 ret
 
 imprimirEncabezadoDeBubbleSort:
@@ -278,3 +277,46 @@ imprimirTituloDescendente:
     add     rsp, 32
 ret
 
+
+; swap:
+;     ; imul    ecx, ecx, 1
+;     ; imul    edx, edx, 1
+
+;     lea     esi, [vector + ecx] ;direccion del primer elemento
+;     lea     edi, [vector + edx] ;direccion del segundo elemento
+
+;     mov     eax, [esi] ; valor 1
+;     mov     ebx, [edi] ; valor 2
+;     ;debug
+;     mov     rcx, debugValor1Swap
+;     mov     r8d, eax
+;     sub     rsp, 32
+;     call    printf
+;     add     rsp, 32
+;     ;fin debug
+;      ;debug
+;     mov     rcx, debugValor2Swap
+;     mov     r8d, ebx
+;     sub     rsp, 32
+;     call    printf
+;     add     rsp, 32
+;     ;fin debug
+;     mov     ecx, eax
+;     mov     eax, ebx
+;     mov     [esi], eax
+
+; ret
+
+imprimirPosicion:
+    mov     eax, dword[posVector]
+    dec     eax
+    imul    dword[longitudDelRegistro]
+    lea     eax, [vector+eax]
+
+    mov     rcx,mensajeNumeroGuardado
+    mov     rdx,[posVector] ;posicion
+    mov     r8d,dword[eax] ;valor guardado
+    sub     rsp, 32
+    call    printf
+    add     rsp, 32
+ret
