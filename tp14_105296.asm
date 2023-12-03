@@ -26,9 +26,7 @@ section .data
     posVector   dq 0
     posNum1     dq 0
     posNum2     dq 0
-    num1    dw 0
-    num2    dw 0
-    aux     dw 0
+    
 
     mensajeEncabezadoBubbleSort     db  10,10,"############# BUBBLE SORT #############",0
     tituloAscendente                db     10,"############# ASCENDENTE  #############",10,0
@@ -38,19 +36,19 @@ section .data
     mensajeLeyendo              db      "__Leyendo registro...",0
     mensajeCerrandoArchivo      db      10,"[Cerrando] archivo...",0
     mensajeNumeroGuardado       db      "El numero guardado en la posicion %d es: %d",10,0
-    ; debug   db  "posVector: %i",10,0
     linea			db	"|%X| ",0
     mensajeIntercambio1     db "Se va a intercambiar la posicion [%d] = [%d] ",10, 0
     mensajeIntercambio2     db "con la posicion [%d] = [%d] ",10,0
+    mensajeNum1EsMayor      db "El numero 1 es mayor!!!",10,0
 
 section .bss
     nombreDeArchivo				resb 	30
     ; posVector 		    		resd	1
 	vector		    times	30	resd	1
 
-	; num1	 				resd	1
-	; num2	 				resd	1
-	; aux	 					resd	1
+	num1    resd 1
+    num2    resd 1
+    aux     resd 1
 
 section .text
 
@@ -246,18 +244,25 @@ bubbleSort:
     mov     dword[posVector], ecx
     call    obtenerValorDePosicion
     mov     r8d, dword[eax]
-    mov     [num1], r8d
-
-    call    imprimirMensajeIntercambio1
 
     mov     dword[posNum2], 9
     mov     ecx,[posNum2]
     mov     dword[posVector], ecx
     call    obtenerValorDePosicion
     mov     r9d, dword[eax]
-    mov     [num2], r9d
+    
+    cmp     r8d, r9d
+    jg      imprimirElNumero1EsMayor
 
+    mov     [num1], r8
+    mov     [num2], r9
+    
+    call    imprimirMensajeIntercambio1
     call    imprimirMensajeIntercambio2
+
+    ; mov eax, [num1]
+    ; mov ebx, [num2]
+    
     
 ret
 
@@ -320,6 +325,14 @@ imprimirMensajeIntercambio2:
     mov     rcx, mensajeIntercambio2
     mov     rdx,[posNum2]
     mov     r8d,[num2]
+    sub     rsp, 32
+    call    printf
+    add     rsp, 32
+ret
+
+
+imprimirElNumero1EsMayor:
+    mov     rcx, mensajeNum1EsMayor
     sub     rsp, 32
     call    printf
     add     rsp, 32
