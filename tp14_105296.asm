@@ -38,9 +38,11 @@ section .data
     mensajeCerrandoArchivo      db      10,"[Cerrando] archivo...",0
     mensajeNumeroGuardado       db      "El numero guardado en la posicion %d es: %d",10,0
     linea			db	"|%X| ",0
-    mensajeIntercambio1     db "Se va a intercambiar la posicion [%d] = [%d] ",10, 0
-    mensajeIntercambio2     db "con la posicion [%d] = [%d] ",10,0
+    mensajeIntercambio1     db 10,"{Se va a intercambiar la posicion [%d] = [%d] ",10, 0
+    mensajeIntercambio2     db "con la posicion [%d] = [%d]}",10,0
     mensajeNum1EsMayor      db "El numero 1 es mayor!!!",10,0
+
+    mensajeDebugCicloFor    db 10, "Dentro del ciclo For - iteracion [%d]",10,10,0
 
 section .bss
     nombreDeArchivo				resb 	30
@@ -64,7 +66,6 @@ main:
     mov 	dword[posVector], 1
     call    imprimirVector
 
-    mov 	dword[posVector], 1
     call    bubbleSort
 
     mov 	dword[posVector], 1
@@ -243,6 +244,18 @@ bubbleSort:
     mov     dword[num1], 0
     mov     dword[num2], 0
 
+    mov 	dword[posVector], 1
+
+mientrasNoSeHayaSwappeado:
+    mov     dword[swapped], 0
+
+iterar:
+    mov     eax, dword[lenVector]
+    cmp     dword[posVector], eax
+    jg      finIterar
+
+    call    imprimirIteracion
+
     mov     ebx, dword[posVector]
 
     mov     dword[posNum1], ebx
@@ -260,7 +273,13 @@ bubbleSort:
 
     call    swapDadoQueSeCumpleCondicion
 
-    
+    inc     dword[posVector]
+    jmp     iterar
+
+finIterar:
+    cmp     dword[swapped], 0
+    je     mientrasNoSeHayaSwappeado
+finDeMientras:
 ret
 
 imprimirEncabezadoDeBubbleSort:
@@ -355,6 +374,8 @@ swap:
     call    obtenerPosicionDeNumero2
     mov     edx, dword[num1]
     mov     dword[eax], edx
+
+    mov     dword[swapped], 1
 ret
 
 swapDadoQueSeCumpleCondicion:
@@ -382,4 +403,12 @@ swapDescendente:
     call    imprimirMensajeIntercambio2
     call    swap
 finSwapDescendente:
+ret
+
+imprimirIteracion:
+    mov     rcx, mensajeDebugCicloFor
+    mov     rdx,[posVector]
+    sub     rsp, 32
+    call    printf
+    add     rsp, 32
 ret
