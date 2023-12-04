@@ -23,6 +23,7 @@ section .data
     lenVector              dd  0
 
     longitudDelRegistro     dd  30
+    nroDeIteracion  dq 0
     posVector   dq 0
     posNum1     dq 0
     posNum2     dq 0
@@ -244,25 +245,30 @@ bubbleSort:
     mov     dword[num1], 0
     mov     dword[num2], 0
 
+    mov 	dword[nroDeIteracion], 1
     mov 	dword[posVector], 1
 
 mientrasNoSeHayaSwappeado:
     mov     dword[swapped], 0
 
 iterar:
-    mov     eax, dword[lenVector]
-    cmp     dword[posVector], eax
+    mov     ecx, dword[lenVector]
+    cmp     dword[nroDeIteracion], ecx
     jg      finIterar
 
     call    imprimirIteracion
 
-    mov     ebx, dword[posVector]
+    mov     ebx, dword[nroDeIteracion]
 
     mov     dword[posNum1], ebx
     call    obtenerPosicionDeNumero1
     mov     r10, [eax]
 
     inc     ebx
+
+    mov     ecx, dword[lenVector]
+    cmp     ebx, ecx
+    jg      finIterar
 
     mov     dword[posNum2], ebx
     call    obtenerPosicionDeNumero2
@@ -273,7 +279,7 @@ iterar:
 
     call    swapDadoQueSeCumpleCondicion
 
-    inc     dword[posVector]
+    inc     dword[nroDeIteracion]
     jmp     iterar
 
 finIterar:
@@ -407,7 +413,7 @@ ret
 
 imprimirIteracion:
     mov     rcx, mensajeDebugCicloFor
-    mov     rdx,[posVector]
+    mov     rdx,[nroDeIteracion]
     sub     rsp, 32
     call    printf
     add     rsp, 32
