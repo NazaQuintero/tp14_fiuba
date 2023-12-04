@@ -26,6 +26,7 @@ section .data
     posVector   dq 0
     posNum1     dq 0
     posNum2     dq 0
+    swapped     dq 0
     
 
     mensajeEncabezadoBubbleSort     db  10,10,"############# BUBBLE SORT #############",0
@@ -257,15 +258,8 @@ bubbleSort:
     mov     [num1], r10
     mov     [num2], r11
 
-    call    imprimirMensajeIntercambio1
-    call    imprimirMensajeIntercambio2
+    call    swapDadoQueSeCumpleCondicion
 
-    call    swap
-
-    ; call    imprimirPosicion
-    
-    ;cmp     r10, r11
-;    jg      imprimirElNumero1EsMayor
     
 ret
 
@@ -361,4 +355,31 @@ swap:
     call    obtenerPosicionDeNumero2
     mov     edx, dword[num1]
     mov     dword[eax], edx
+ret
+
+swapDadoQueSeCumpleCondicion:
+    mov ah, byte[modoDeOrdenamiento]
+	cmp ah, byte[ASCENDENTE]
+    je      swapAscendente
+    jne     swapDescendente
+ret
+
+swapAscendente:
+    cmp     r10, r11
+    jng     finSwapAscendente
+
+    call    imprimirMensajeIntercambio1
+    call    imprimirMensajeIntercambio2
+    call    swap
+finSwapAscendente:
+ret
+
+swapDescendente:
+    cmp     r10, r11
+    jg     finSwapDescendente
+
+    call    imprimirMensajeIntercambio1
+    call    imprimirMensajeIntercambio2
+    call    swap
+finSwapDescendente:
 ret
