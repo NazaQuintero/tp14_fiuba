@@ -48,7 +48,6 @@ section .bss
 
 	num1    resd 1
     num2    resd 1
-    aux     resd 1
 
 section .text
 
@@ -64,9 +63,10 @@ main:
     mov 	dword[posVector], 1
     call    imprimirVector
 
+    mov 	dword[posVector], 1
     call    bubbleSort
 
-    mov     dword[posVector], 1
+    mov 	dword[posVector], 1
     call    imprimirVector
 
     jmp     endProg
@@ -238,21 +238,21 @@ bubbleSort:
     call    imprimirEncabezadoDeBubbleSort
     call    imprimirModoDeOrdenamiento
     ;test
+    
+    mov     dword[num1], 0
+    mov     dword[num2], 0
 
-    mov     dword[posNum1], 4
-    mov     ecx,[posNum1]
-    mov     dword[posVector], ecx
-    call    obtenerValorDePosicion
+    mov     ebx, dword[posVector]
+
+    mov     dword[posNum1], ebx
+    call    obtenerPosicionDeNumero1
     mov     r10, [eax]
 
-    mov     dword[posNum2], 9
-    mov     ecx,[posNum2]
-    mov     dword[posVector], ecx
-    call    obtenerValorDePosicion
+    inc     ebx
+
+    mov     dword[posNum2], ebx
+    call    obtenerPosicionDeNumero2
     mov     r11, [eax]
-    
-    cmp     r10, r11
-    jg      imprimirElNumero1EsMayor
 
     mov     [num1], r10
     mov     [num2], r11
@@ -260,8 +260,12 @@ bubbleSort:
     call    imprimirMensajeIntercambio1
     call    imprimirMensajeIntercambio2
 
-    ; mov eax, [num1]
-    ; mov ebx, [num2]
+    call    swap
+
+    ; call    imprimirPosicion
+    
+    ;cmp     r10, r11
+;    jg      imprimirElNumero1EsMayor
     
 ret
 
@@ -311,6 +315,18 @@ obtenerValorDePosicion:
     lea     eax, [vector+eax]   ;deja el valor en eax
 ret
 
+obtenerPosicionDeNumero1:
+    mov     ecx,[posNum1]
+    mov     dword[posVector], ecx
+    call    obtenerValorDePosicion
+ret
+
+obtenerPosicionDeNumero2:
+    mov     ecx,[posNum2]
+    mov     dword[posVector], ecx
+    call    obtenerValorDePosicion
+ret
+
 imprimirMensajeIntercambio1:
     mov     rcx, mensajeIntercambio1
     mov     rdx,[posNum1]
@@ -337,31 +353,12 @@ imprimirElNumero1EsMayor:
     add     rsp, 32
 ret
 
-; swap:
-;     ; imul    ecx, ecx, 1
-;     ; imul    edx, edx, 1
+swap:
+    call    obtenerPosicionDeNumero1
+    mov 	edx, dword[num2]
+    mov     dword[eax], edx
 
-;     lea     esi, [vector + ecx] ;direccion del primer elemento
-;     lea     edi, [vector + edx] ;direccion del segundo elemento
-
-;     mov     eax, [esi] ; valor 1
-;     mov     ebx, [edi] ; valor 2
-;     ;debug
-;     mov     rcx, debugValor1Swap
-;     mov     r8d, eax
-;     sub     rsp, 32
-;     call    printf
-;     add     rsp, 32
-;     ;fin debug
-;      ;debug
-;     mov     rcx, debugValor2Swap
-;     mov     r8d, ebx
-;     sub     rsp, 32
-;     call    printf
-;     add     rsp, 32
-;     ;fin debug
-;     mov     ecx, eax
-;     mov     eax, ebx
-;     mov     [esi], eax
-
-; ret
+    call    obtenerPosicionDeNumero2
+    mov     edx, dword[num1]
+    mov     dword[eax], edx
+ret
